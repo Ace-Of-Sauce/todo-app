@@ -3,14 +3,14 @@ import Image from "next/image";
 import AddTask from "./components/AddTask";
 import TodoTable from "./components/AddTask";
 import Theme from "./components/Theme";
-import { ThemeProvider } from "@mui/material/styles";
+
 
 export default function Home() {
   return (
     <main className="max-w-4xl mx-auto mt-20 gap-5">
-      <ThemeProvider>
+      
         <Theme style={{ position: "absolute", top: 0, left: 0, zIndex: 100 }} />
-      </ThemeProvider>
+
       <div className="grid grid-cols-3 gap-5">
         <div className="col-span-1 text-2xl font-bold my-5"></div>
         <div className="col-span-2 text-center my-5 flex flex-col gap-4">
