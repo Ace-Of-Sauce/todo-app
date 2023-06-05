@@ -1,5 +1,7 @@
 import AddTask from "./AddTask";
 import { BsFillCalendar2CheckFill } from "react-icons/bs";
+
+
 const TodoTable = ({ tasks }) => {
     return (
       <div>
@@ -11,8 +13,8 @@ const TodoTable = ({ tasks }) => {
                 <th >
                 <BsFillCalendar2CheckFill size={20} color="white"/>
                 </th>
-                <th className="text-white">NAME</th>
-                <th className="text-white">ACTIONS</th>
+                <th className="text-white">Title</th>
+                <th className="text-white">Description</th>
                 
               </tr>
             </thead>
@@ -22,8 +24,8 @@ const TodoTable = ({ tasks }) => {
                   <th>
                     <input type="checkbox" className="checkbox " />
                   </th>
-                  <td>{task}</td>
-                  <td>{task}</td>
+                  <td>{task.title}</td>
+                  <td>{task.description}</td>
                   
                 </tr>
               ))}
