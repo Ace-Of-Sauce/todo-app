@@ -15,18 +15,18 @@ const TodoTable = ({ tasks }) => {
                 </th>
                 <th className="text-white">Title</th>
                 <th className="text-white">Description</th>
-                
+                <th className="text-white">Status</th>
               </tr>
             </thead>
             <tbody>
               {tasks.map((task, index) => (
-                <tr key={index}>
+                <tr key={index} >
                   <th>
                     <input type="checkbox" className="checkbox " />
                   </th>
                   <td>{task.title}</td>
                   <td>{task.description}</td>
-                  
+                  <td>{task.status}</td>
                 </tr>
               ))}
             </tbody>
