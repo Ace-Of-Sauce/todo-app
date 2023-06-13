@@ -8,10 +8,8 @@ const TodoTable = ({ todos }) => {
   const [showCompletePrompt, setShowCompletePrompt] = useState(false);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
+  const [todoList, setTodoList] = useState([])
 
-  useEffect(()=>{
-    setTasks(todos)
-  }, [todos, tasks])
 
 
   async function handleCompletePrompt() {
@@ -27,26 +25,50 @@ const TodoTable = ({ todos }) => {
     const updatedTodo = await todo.json();
 
     if (updatedTodo) {
-      console.log("Todo updated:", updatedTodo);
-
       setTasks(prev => {
-        const index = prev.findIndex(t => t.title === updatedTodo.title);
-        console.log('index', index)
-        if (index !== -1) {
-          const updatedTask = { ...prev[index], status: "completed" };
-          const tempTasks = [...prev];
-          tempTasks.splice(index, 1, updatedTask);
-          return tempTasks;
-        } else {
-          return prev;
-        }
+        const updatedTasks = prev.map(task => {
+          if (task.title === updatedTodo.title) {
+            return { ...task, status: "completed" };
+          }
+          return task;
+        });
+        setTodoList(updatedTasks);
+        return updatedTasks;
       });
+
+      
     }
+    setShowCompletePrompt(false);
   }
 
+  useEffect(() => {
+    setTasks(todos);
+  }, [todos]);
 
-  function handleDeletePrompt() { 
-    // Handle delete prompt logic
+  useEffect(() => {
+    if (todoList.length > 0) {
+      setTasks(todoList);
+    }
+  }, [todoList]);
+
+
+  async function handleDeletePrompt() {
+    const response = await fetch('http://localhost:4000/todos/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
+      body: JSON.stringify(selectedItem)
+    });
+
+    const jsonResponse = await response.json();
+   
+    if (jsonResponse.deletedCount > 0 ) {
+      const newTodos = todos.filter(t => t.title !== selectedItem.title);
+      setTasks(newTodos);
+    }
+    setShowDeletePrompt(false);
   }
 
   function handleItemClick(item) {
@@ -89,14 +111,14 @@ const TodoTable = ({ todos }) => {
                   >
                     {/* Open the modal using state */}
                     <button
-                      className="btn"
+                      className="btn btn-outline btn-success"
                       onClick={() => setShowCompletePrompt(true)}
                     >
                       ✅
                     </button>
                     
                     <button
-                      className="btn"
+                      className="btn btn-outline btn-error"
                       style={{marginLeft: "15px"}}
                       onClick={() => setShowDeletePrompt(true)}
                     >
@@ -119,15 +141,18 @@ const TodoTable = ({ todos }) => {
               <div className="modal-action">
                 {/* if there is a button in form, it will close the modal */}
                 <button
-                  className="btn"
+                  className="btn btn-success"
                   onClick={async() => await handleCompletePrompt()}
                 >
 
                   Yes
                 </button>
                 <button
-                  className="btn"
-                  onClick={() => setShowCompletePrompt(false)}
+                  className="btn btn-error"
+                  onClick={() => {
+                    setShowCompletePrompt(false);
+                    setShowDeletePrompt(false);
+                  }}
                 >
 
                   Cancel
@@ -148,15 +173,18 @@ const TodoTable = ({ todos }) => {
               <div className="modal-action">
                 {/* if there is a button in form, it will close the modal */}
                 <button
-                  className="btn"
-                  onClick={() => handleDeletePrompt}
+                  className="btn btn-success"
+                  onClick={async() => await handleDeletePrompt()}
                 >
 
                   Yes
                 </button>
                 <button
-                  className="btn"
-                  onClick={() => setShowCompletePrompt(false)}
+                  className="btn btn-error"
+                  onClick={() => {
+                    setShowCompletePrompt(false);
+                    setShowDeletePrompt(false);
+                  }}
                 >
 
                   Cancel

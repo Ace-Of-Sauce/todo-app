@@ -8,8 +8,19 @@ export default function TodoApp() {
    
 
   const [taskList, setTaskList] = useState([]);
-    const handleAddTask = (task) => {
-      setTaskList([...taskList, task]);
+  const [todos, setTodos] = useState([]);
+    const handleAddTask = async(task) => {
+      //Check for duplicates
+     const todo =  await fetch('http://localhost:4000/todos', {
+       method: 'POST',
+       body: JSON.stringify(task),
+       headers: {
+         'Content-Type': 'application/json',
+         'Accept': '*/*'
+       },
+      })
+      const savedTask = await todo.json();
+      if(savedTask) setTaskList([...taskList, task]);
     };
 
   useEffect(async () => {
@@ -33,18 +44,18 @@ export default function TodoApp() {
     let tasks = await getTodos();
     console.log("tasks in page", tasks)
     setTaskList(tasks);
+    setTodos(tasks)
   }, []);
 
-    console.log("taskList:", taskList)
 
     function handleSelect(e){
       let filterValue = e.target.value.toString();
       if(filterValue === 'All'){
-        setTaskList(tasks)
+        setTaskList(todos)
       }
       else{
-        setTaskList( 
-          tasks.filter(p => p.status === e.target.value)
+        setTaskList(
+          todos.filter(p => p.status === e.target.value)
         )
       }   
     }
@@ -72,9 +83,9 @@ export default function TodoApp() {
             </dialog>
 
             <select className="select select-bordered max-w-xs" onChange={handleSelect}>
-              <option selected>All</option>
-              <option>Active</option>
-              <option>Completed</option>
+              <option defaultValue={"All"}>All</option>
+              <option value={"Active"}>Active</option>
+              <option value={"Completed"}>Completed</option>
             </select>
           </div>
           

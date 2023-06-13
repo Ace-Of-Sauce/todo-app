@@ -14,8 +14,14 @@ export default function Home() {
     setIsDarkMode(mode);
   }
 
-  function getColor(mode){
-    return mode === true ? '#333535' : '#FFFFFF'
+  function getColor(mode, type){
+    switch(type){
+      case 'body':
+        return mode === true ? '#333535' : '#FFFFFF';
+      case 'header':
+        return mode === true ? '#071e26' : '#e9f5f9'
+    }
+    
   }
 
   
@@ -23,17 +29,17 @@ export default function Home() {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh'}}>
-      <div className="flex flex-row justify-between" style={{ backgroundColor: isDarkMode ? "#0a0b0b" : "#FFFFF", paddingLeft: '3%', paddingRight: '3%' }}>
+      <div className="flex flex-row justify-between" style={{ backgroundColor: getColor(isDarkMode, 'header'), paddingLeft: '3%', paddingRight: '3%' }}>
         <header> 
-          <h1>Todo App</h1>       
+          {isDarkMode ? <h1 style={{ color: "white", fontFamily: 'monospace', fontSize: '20px' }}>Todo App</h1 > : <h1 style={{ color: "black", fontFamily: 'monospace', fontSize: '20px' }}>Todo App</h1> }       
         </header>
         <DarkModeSwitch onSwitch={onDarkModeSwitch}/>
       </div>
         
-      <div style={{ paddingLeft: '3%', paddingRight: '3%', backgroundColor: getColor(isDarkMode), flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ paddingLeft: '3%', paddingRight: '3%', backgroundColor: getColor(isDarkMode, 'body'), flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div className="col-span-1 text-2xl font-bold my-5"></div>
         <div className="col-span-2 text-center my-5 flex flex-col gap-4">
-          <h1 className=" text-2xl font-bold text-center">Todo List</h1>
+          {isDarkMode ? <h1 className=" text-2xl font-bold text-center" style={{ color: "white", fontSize: '30px' }}>Todo List</h1> : <h1 className=" text-2xl font-bold text-center" style={{ color: "black", fontSize: '30px' }}>Todo List</h1>}
          <TodoApp/>
         </div>
       </div>
