@@ -69,7 +69,14 @@ app.post("/todos/complete", (req, res)=>{
         }
     });
     
-})
+});
+
+app.post("/todos/delete", async(req, res)=>{
+    var title = req.body.title;
+    var response = await Todo.deleteOne({title: title});
+    if(response) res.status(200).json(response);
+    else res.status(500)
+});
 
 app.listen(4000, ()=>{
     console.log("Server is listening on port 4000")
