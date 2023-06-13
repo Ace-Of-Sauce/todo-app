@@ -3,7 +3,7 @@ import AddTask from "./AddTask";
 import { BsFillCalendar2CheckFill } from "react-icons/bs";
  
 
-const TodoTable = ({ todos }) => {
+const TodoTable = ({ todos, onSelectTodo }) => {
   const [tasks, setTasks] = useState(todos)
   const [showCompletePrompt, setShowCompletePrompt] = useState(false);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
@@ -71,6 +71,10 @@ const TodoTable = ({ todos }) => {
     setShowDeletePrompt(false);
   }
 
+  function handleCheckMarkSelect(){
+    onSelectTodo(selectedItem)
+  }
+
   function handleItemClick(item) {
     setSelectedItem(item);
     console.log("selected item: ", item)
@@ -84,7 +88,7 @@ const TodoTable = ({ todos }) => {
           <thead className="bg-mygray rounded-t-lg text-zinc-50">
             <tr>
               <th>
-                <BsFillCalendar2CheckFill size={20} color="white" />
+                <BsFillCalendar2CheckFill size={20} color="white" onSelect={handleCheckMarkSelect}/>
               </th>
               <th className="text-white">Title</th>
               <th className="text-white">Description</th>
