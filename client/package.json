@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
+    "deploy": "npm run build && xcopy /s /e /y .\\out\\* ..\\server\\public\\",
     "start": "next start",
     "lint": "next lint"
   },

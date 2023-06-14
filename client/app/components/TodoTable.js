@@ -14,7 +14,7 @@ const TodoTable = ({ todos, onSelectTodo }) => {
 
 
   async function handleCompletePrompt() {
-    const todo = await fetch(`${backendUrl}/todos/complete`, {
+    const todo = await fetch(`/todos/complete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const TodoTable = ({ todos, onSelectTodo }) => {
 
 
   async function handleDeletePrompt() {
-    const response = await fetch(`${backendUrl}/todos/delete`, {
+    const response = await fetch(`/todos/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
