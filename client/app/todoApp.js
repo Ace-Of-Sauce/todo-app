@@ -1,9 +1,9 @@
 import TodoTable from "./components/TodoTable";
 import TodoForm from "./components/AddTask";
 import { useEffect, useState } from "react";
+import { backendUrl } from "./page";
 
 export default function TodoApp() {
-  
   const [taskList, setTaskList] = useState([]);
   const [showDeleteCompletePrompt, setShowDeleteCompletePrompt] = useState(false);
   const [showDeleteSelectedPromt, setDeleteSelectedPrompt] = useState(false)
@@ -11,10 +11,12 @@ export default function TodoApp() {
   const [nonSelectedPrompt, setShowNonSelectedPrompt] = useState(false);
   const [selectedTodos, setSelectedTodos] = useState([]);
 
+  const selectedTodosArray = [];
+
 
     const handleAddTask = async(task) => {
       //Check for duplicates
-     const todo =  await fetch('http://localhost:4000/todos', {
+     const todo =  await fetch(`${backendUrl}/todos`, {
        method: 'POST',
        body: JSON.stringify(task),
        headers: {
@@ -29,7 +31,7 @@ export default function TodoApp() {
   useEffect(async () => {
     async function getTodos() {
       try {
-        const res = await fetch('http://localhost:4000/todos', {
+        const res = await fetch(`${backendUrl}/todos`, {
           method: 'GET'
         });
         if (!res.ok) {
@@ -89,8 +91,9 @@ export default function TodoApp() {
   }
 
   function onSelectTodo(todo){
+    selectedTodosArray.push(todo);
     console.log('current todo:', todo)
-    setSelectedTodos(prevTodos => prevTodos.push(todo))
+    setSelectedTodos(selectedTodosArray)
   }
   
     return (

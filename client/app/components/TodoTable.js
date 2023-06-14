@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
 import { BsFillCalendar2CheckFill } from "react-icons/bs";
+import { backendUrl } from "../page";
  
 
 const TodoTable = ({ todos, onSelectTodo }) => {
@@ -13,7 +14,7 @@ const TodoTable = ({ todos, onSelectTodo }) => {
 
 
   async function handleCompletePrompt() {
-    const todo = await fetch('http://localhost:4000/todos/complete', {
+    const todo = await fetch(`${backendUrl}/todos/complete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const TodoTable = ({ todos, onSelectTodo }) => {
 
 
   async function handleDeletePrompt() {
-    const response = await fetch('http://localhost:4000/todos/delete', {
+    const response = await fetch(`${backendUrl}/todos/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
