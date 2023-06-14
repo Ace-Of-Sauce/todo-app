@@ -1,17 +1,22 @@
 import TodoTable from "./components/TodoTable";
 import TodoForm from "./components/AddTask";
 import { useEffect, useState } from "react";
+import { backendUrl } from "./page";
 
 export default function TodoApp() {
-    
-  
-   
-
   const [taskList, setTaskList] = useState([]);
+  const [showDeleteCompletePrompt, setShowDeleteCompletePrompt] = useState(false);
+  const [showDeleteSelectedPromt, setDeleteSelectedPrompt] = useState(false)
   const [todos, setTodos] = useState([]);
+  const [nonSelectedPrompt, setShowNonSelectedPrompt] = useState(false);
+  const [selectedTodos, setSelectedTodos] = useState([]);
+
+  const selectedTodosArray = [];
+
+
     const handleAddTask = async(task) => {
       //Check for duplicates
-     const todo =  await fetch('http://localhost:4000/todos', {
+     const todo =  await fetch(`${backendUrl}/todos`, {
        method: 'POST',
        body: JSON.stringify(task),
        headers: {
@@ -26,7 +31,7 @@ export default function TodoApp() {
   useEffect(async () => {
     async function getTodos() {
       try {
-        const res = await fetch('http://localhost:4000/todos', {
+        const res = await fetch(`${backendUrl}/todos`, {
           method: 'GET'
         });
         if (!res.ok) {
@@ -49,17 +54,47 @@ export default function TodoApp() {
 
 
     function handleSelect(e){
+      
       let filterValue = e.target.value.toString();
       if(filterValue === 'All'){
         setTaskList(todos)
       }
       else{
-        setTaskList(
-          todos.filter(p => p.status === e.target.value)
-        )
-      }   
+        // Filter the todos based on the selected value
+        let filteredList = todos.filter(
+          (task) => task.status.toLowerCase() === filterValue.toLowerCase()
+        );
+        setTaskList(filteredList);
+      }  
+       
     }
 
+  async function handleDeleteCompleted(){
+
+    setShowDeleteCompletePrompt(false)
+  }
+
+  async function deleteSelectedTodos(){
+
+  }
+  async function handleDeleteSelected(){
+    console.log('length:', selectedTodos.length)
+    if (selectedTodos.length === 0) {
+      setShowNonSelectedPrompt(true)
+    }
+    else{
+      setDeleteSelectedPrompt(true);
+
+    }
+
+    setDeleteSelectedPrompt(false)
+  }
+
+  function onSelectTodo(todo){
+    selectedTodosArray.push(todo);
+    console.log('current todo:', todo)
+    setSelectedTodos(selectedTodosArray)
+  }
   
     return (
       <div className='flex flex-row'>
@@ -89,14 +124,108 @@ export default function TodoApp() {
             </select>
           </div>
           
-          <button className="btn btn-error">Delete</button>
+          <div>
+              <button className="btn btn-error" onClick={async()=> await handleDeleteSelected()} style={{marginRight: '5px'}}>Delete Selected</button>
+              <button className="btn btn-error" onClick={()=>setShowDeleteCompletePrompt(true)}>Delete Completed</button>
+          </div>
+          
         </div>
           {taskList? 
-            <TodoTable todos={taskList} />
+            <TodoTable todos={taskList} onSelectTodo={onSelectTodo}/>
             :
             <div>No Todos To Display. Click On Add Todo To Add</div>
           }
-        </div>        
+        </div>
+        {showDeleteSelectedPromt && (
+          <dialog open className="modal">
+            <form method="dialog" className="modal-box">
+              <h3 className="font-bold text-lg">Please Confirm</h3>
+              <p className="py-4">
+                Are You Sure You Want To Delete Selected Todos?
+              </p>
+              <div className="modal-action">
+                {/* if there is a button in form, it will close the modal */}
+                <button
+                  className="btn btn-success"
+                  onClick={async () => await deleteSelectedTodos()}
+                >
+
+                  Yes
+                </button>
+                <button
+                  className="btn btn-error"
+                  onClick={() => {
+                    setDeleteSelectedPrompt(false);
+                    setShowDeleteCompletePrompt(false);
+                  }}
+                >
+
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </dialog>
+
+
+        )}
+        {showDeleteCompletePrompt && (
+          <dialog open className="modal">
+            <form method="dialog" className="modal-box">
+              <h3 className="font-bold text-lg">Please Confirm</h3>
+              <p className="py-4">
+                Are You Sure You Want To Delete All Completed Todos?
+              </p>
+              <div className="modal-action">
+                {/* if there is a button in form, it will close the modal */}
+                <button
+                  className="btn btn-success"
+                  onClick={async () => await handleDeleteCompleted()}
+                >
+
+                  Yes
+                </button>
+                <button
+                  className="btn btn-error"
+                  onClick={() => {
+                    setDeleteSelectedPrompt(false);
+                    setShowDeleteCompletePrompt(false);
+                  }}
+                >
+
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </dialog>
+
+
+        )}     
+        {nonSelectedPrompt && (
+          <dialog open className="modal">
+            <form method="dialog" className="modal-box">
+              <h3 className="font-bold text-lg">Please Confirm</h3>
+              <p className="py-4">
+                Please Select A Todo To continue
+              </p>
+              <div className="modal-action">
+                {/* if there is a button in form, it will close the modal */}
+                
+                <button
+                  className="btn btn-error"
+                  onClick={() => {
+                    setShowNonSelectedPrompt(false)
+                  }}
+                >
+
+                  Close
+                </button>
+              </div>
+            </form>
+          </dialog>
+
+
+        )}
+
       </div>
     );
   };

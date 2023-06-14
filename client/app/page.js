@@ -4,8 +4,12 @@ import TodoApp from "./todoApp";
 import { useEffect, useState, createContext } from "react";
 
 export const ThemeContext = createContext(null);
-
+const frontendUrl = window.location.href;
+const backendPort = 4000;
+export const backendUrl = frontendUrl.split(":")[0] + ":" + frontendUrl.split(":")[1] + ":" + backendPort;
 export default function Home() {
+
+
  
   const [theme, setTheme] = useState({themeColor: 'light'})
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -46,3 +50,5 @@ export default function Home() {
     </div>
   );
 }
+
+

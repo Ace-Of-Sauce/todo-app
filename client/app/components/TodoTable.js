@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import AddTask from "./AddTask";
 import { BsFillCalendar2CheckFill } from "react-icons/bs";
+import { backendUrl } from "../page";
  
 
-const TodoTable = ({ todos }) => {
+const TodoTable = ({ todos, onSelectTodo }) => {
   const [tasks, setTasks] = useState(todos)
   const [showCompletePrompt, setShowCompletePrompt] = useState(false);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
@@ -13,7 +14,7 @@ const TodoTable = ({ todos }) => {
 
 
   async function handleCompletePrompt() {
-    const todo = await fetch('http://localhost:4000/todos/complete', {
+    const todo = await fetch(`${backendUrl}/todos/complete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const TodoTable = ({ todos }) => {
 
 
   async function handleDeletePrompt() {
-    const response = await fetch('http://localhost:4000/todos/delete', {
+    const response = await fetch(`${backendUrl}/todos/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,6 +72,10 @@ const TodoTable = ({ todos }) => {
     setShowDeletePrompt(false);
   }
 
+  function handleCheckMarkSelect(){
+    onSelectTodo(selectedItem)
+  }
+
   function handleItemClick(item) {
     setSelectedItem(item);
     console.log("selected item: ", item)
@@ -84,7 +89,7 @@ const TodoTable = ({ todos }) => {
           <thead className="bg-mygray rounded-t-lg text-zinc-50">
             <tr>
               <th>
-                <BsFillCalendar2CheckFill size={20} color="white" />
+                <BsFillCalendar2CheckFill size={20} color="white" onSelect={handleCheckMarkSelect}/>
               </th>
               <th className="text-white">Title</th>
               <th className="text-white">Description</th>
