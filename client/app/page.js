@@ -4,9 +4,10 @@ import TodoApp from "./todoApp";
 import { useEffect, useState, createContext } from "react";
 
 export const ThemeContext = createContext(null);
-const frontendUrl = window.location.href;
+//const frontendUrl = window.location.href.split(":")[0] + ":" + frontendUrl.split(":")[1] + ":" + backendPort;
 const backendPort = 4000;
-export const backendUrl = frontendUrl.split(":")[0] + ":" + frontendUrl.split(":")[1] + ":" + backendPort;
+// export const backendUrl = process.env.VERCEL_URL
+// console.log("backendUrl", backendUrl)
 export default function Home() {
 
 

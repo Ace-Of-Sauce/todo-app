@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
 import bodyParser from "body-parser";
+import exp from "constants";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const todoSchema = new mongoose.Schema({
     title: String,
@@ -28,6 +31,15 @@ app.use(bodyParser.urlencoded({
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+app.use(express.static(path.join(dirname, './public')));
+
+app.get("/", (req, res)=>{
+    res.sendFile(path.join(dirname, './public/index.html'));
+})
 
 app.get("/todos", async(req, res)=>{
    const todos = await Todo.find({}).exec();

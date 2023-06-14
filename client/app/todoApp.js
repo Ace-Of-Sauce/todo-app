@@ -16,7 +16,7 @@ export default function TodoApp() {
 
     const handleAddTask = async(task) => {
       //Check for duplicates
-     const todo =  await fetch(`${backendUrl}/todos`, {
+     const todo =  await fetch(`/todos`, {
        method: 'POST',
        body: JSON.stringify(task),
        headers: {
@@ -31,7 +31,7 @@ export default function TodoApp() {
   useEffect(async () => {
     async function getTodos() {
       try {
-        const res = await fetch(`${backendUrl}/todos`, {
+        const res = await fetch(`/todos`, {
           method: 'GET'
         });
         if (!res.ok) {
