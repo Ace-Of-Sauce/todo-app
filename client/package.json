@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
-    "deploy": "npm run build && xcopy /s /e /y .\\out\\* ..\\server\\public\\",
+    "deploy-dev": "npm run build && xcopy /s /e /y .\\out\\* ..\\server\\public\\",
+    "deploy-prod": "npm run build && cp -r ./out/* ../server/public/",
     "start": "next start",
     "lint": "next lint"
   },
